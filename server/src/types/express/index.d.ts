@@ -1,0 +1,9 @@
+import { Express } from 'express-serve-static-core';
+
+declare global {
+    namespace Express {
+        interface Request {
+            user?: any; // Replace 'any' with your User type if available
+        }
+    }
+}

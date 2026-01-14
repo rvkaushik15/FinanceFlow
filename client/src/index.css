@@ -1,0 +1,58 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-gray-50 dark:bg-dark-bg text-gray-900 dark:text-silver-200 antialiased selection:bg-gold-500/30 selection:text-gold-200;
+  }
+
+  /* Custom Scrollbar for Chrome identification */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-dark-bg;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-dark-border rounded-full hover:bg-gold-600 transition-colors;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-white/90 dark:bg-dark-card/60 backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-glass dark:shadow-xl;
+  }
+
+  .metal-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-tr from-silver-300 via-white to-silver-300;
+  }
+
+  .gold-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-tr from-gold-400 via-gold-200 to-gold-400;
+  }
+
+  .gold-border {
+    @apply border border-gold-500/20 hover:border-gold-500/50 transition-colors duration-300;
+  }
+
+  .nav-item-active {
+    @apply relative text-gold-400 bg-gold-900/10;
+  }
+
+  .nav-item-active::before {
+    content: '';
+    @apply absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-gold-500 rounded-r-full;
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+  }
+}
+
+/* Dynamic Background Effect */
+.bg-grid-pattern {
+  background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 30px 30px;
+}
