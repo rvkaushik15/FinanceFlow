@@ -48,18 +48,39 @@ export const createCategory = async (req: Request, res: Response) => {
 // @access  Private
 export const deleteCategory = async (req: Request, res: Response) => {
     const { id } = req.params;
+    console.log(`[DELETE] Request for Category ID: ${id}`);
 
     try {
         const category = await prisma.category.findUnique({ where: { id: String(id) } });
+        console.log(`[DELETE] Found category:`, category ? 'Yes' : 'No');
 
         if (!category || category.userId !== req.user.id) {
+            console.log(`[DELETE] Category not found or user mismatch. CatUser: ${category?.userId}, ReqUser: ${req.user.id}`);
             res.status(404).json({ message: 'Category not found' });
             return;
         }
 
+        // Manually handle relations to ensure deletion succeeds
+        console.log('[DELETE] Nullifying transactions...');
+        const transUpdate = await prisma.transaction.updateMany({
+            where: { categoryId: String(id) },
+            data: { categoryId: null }
+        });
+        console.log(`[DELETE] Transactions updated: ${transUpdate.count}`);
+
+        console.log('[DELETE] Deleting budgets...');
+        const budgetDelete = await prisma.budget.deleteMany({
+            where: { categoryId: String(id) }
+        });
+        console.log(`[DELETE] Budgets deleted: ${budgetDelete.count}`);
+
+        console.log('[DELETE] Deleting category...');
         await prisma.category.delete({ where: { id: String(id) } });
+        console.log('[DELETE] Success');
+
         res.json({ message: 'Category removed' });
     } catch (error) {
-        res.status(500).json({ message: 'Server Error' });
+        console.error('[DELETE] ERROR:', error);
+        res.status(500).json({ message: 'Server Error', error: String(error) });
     }
 };

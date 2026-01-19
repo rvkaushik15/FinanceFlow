@@ -48,13 +48,15 @@ const Budgets = () => {
     };
 
     const handleDelete = async (id: string) => {
-        if (!confirm('Remove this budget?')) return;
+        // if (!confirm('Remove this budget?')) return;
+        toast.info('Deleting budget...');
         try {
             await api.delete(`/budgets/${id}`);
             toast.success('Budget removed');
             fetchData();
-        } catch (error) {
-            toast.error('Failed to remove budget');
+        } catch (error: any) {
+            console.error(error);
+            toast.error(error.response?.data?.message || 'Failed to remove budget');
         }
     };
 
@@ -82,8 +84,11 @@ const Budgets = () => {
                     return (
                         <div key={budget.id} className="glass-card p-6 rounded-xl shadow-sm relative group hover:border-gold-500/30 transition-all">
                             <button
-                                onClick={() => handleDelete(budget.id)}
-                                className="absolute top-4 right-4 text-gray-400 dark:text-gray-500 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleDelete(budget.id);
+                                }}
+                                className="absolute top-4 right-4 text-gray-400 dark:text-gray-500 hover:text-red-500 z-50 p-2"
                             >
                                 <Trash2 size={18} />
                             </button>

@@ -84,6 +84,7 @@ export const deleteGoal = async (req: Request, res: Response): Promise<void> => 
         await prisma.goal.delete({ where: { id: String(id) } });
         res.json({ message: 'Goal removed' });
     } catch (error) {
-        res.status(500).json({ message: 'Server Error' });
+        console.error('Delete Goal Error:', error);
+        res.status(500).json({ message: 'Server Error', error: String(error) });
     }
 };

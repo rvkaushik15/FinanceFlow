@@ -1,0 +1,20 @@
+{
+    "name": "finance-tracker-root",
+    "private": true,
+    "version": "1.0.0",
+    "workspaces": [
+        "client",
+        "server"
+    ],
+    "scripts": {
+        "build": "npm run build --workspace=client",
+        "postinstall": "prisma generate --schema=./server/prisma/schema.prisma"
+    },
+    "dependencies": {
+        "@prisma/client": "^5.10.0",
+        "express": "^5.2.1"
+    },
+    "devDependencies": {
+        "prisma": "5.10.0"
+    }
+}

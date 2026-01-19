@@ -78,6 +78,11 @@ export const deleteAccount = async (req: Request, res: Response): Promise<void> 
             return;
         }
 
+        // Manually delete related transactions first
+        await prisma.transaction.deleteMany({
+            where: { accountId: String(id) }
+        });
+
         await prisma.account.delete({ where: { id: String(id) } });
         res.json({ message: 'Account removed' });
     } catch (error) {

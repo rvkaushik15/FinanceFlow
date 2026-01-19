@@ -42,13 +42,15 @@ const Accounts = () => {
     };
 
     const handleDelete = async (id: string) => {
-        if (!confirm('Are you sure? This will delete all transactions associated with this account.')) return;
+        // if (!confirm('Are you sure? This will delete all transactions associated with this account.')) return;
+        toast.info('Deleting account...');
         try {
             await api.delete(`/accounts/${id}`);
             toast.success('Account deleted');
             fetchData();
-        } catch (error) {
-            toast.error('Failed to delete account');
+        } catch (error: any) {
+            console.error(error);
+            toast.error(error.response?.data?.message || 'Failed to delete account');
         }
     };
 
@@ -81,10 +83,13 @@ const Accounts = () => {
                     const Icon = getIcon(acc.type);
                     return (
                         <div key={acc.id} className="glass-card p-6 rounded-2xl relative group hover:border-gold-500/30 transition-all duration-300">
-                            <div className="absolute top-0 right-0 p-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <div className="absolute top-0 right-0 p-3 z-50">
                                 <button
-                                    onClick={() => handleDelete(acc.id)}
-                                    className="p-2 bg-red-100 text-red-500 dark:bg-red-500/10 dark:text-red-400 rounded-lg hover:bg-red-200 dark:hover:bg-red-500/20"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleDelete(acc.id);
+                                    }}
+                                    className="p-2 bg-red-100/80 text-red-500 rounded-lg hover:bg-red-200 hover:text-red-700 transition-colors shadow-sm"
                                 >
                                     <Trash2 size={18} />
                                 </button>

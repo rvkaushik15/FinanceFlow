@@ -110,6 +110,7 @@ export const deleteBudget = async (req: Request, res: Response): Promise<void> =
         await prisma.budget.delete({ where: { id: String(id) } });
         res.json({ message: 'Budget removed' });
     } catch (error) {
-        res.status(500).json({ message: 'Server Error' });
+        console.error('Delete Budget Error:', error);
+        res.status(500).json({ message: 'Server Error', error: String(error) });
     }
 };

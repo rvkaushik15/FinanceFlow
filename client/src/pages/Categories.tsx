@@ -43,12 +43,17 @@ const Categories = () => {
     };
 
     const handleDelete = async (id: string) => {
-        if (!confirm('Delete this category?')) return;
+        console.log('Attempting to delete category:', id);
+        toast.info(`Attempting to delete ${id}...`);
+        // if (!confirm('Delete this category?')) return; 
         try {
+            console.log('Sending DELETE request...');
             await api.delete(`/categories/${id}`);
+            console.log('DELETE success');
             toast.success('Category deleted');
             fetchData();
         } catch (error: any) {
+            console.error('DELETE error:', error);
             toast.error(error.response?.data?.message || 'Failed to delete category');
         }
     };
@@ -115,12 +120,15 @@ const Categories = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {categories.map((cat) => (
                         <div key={cat.id} className="glass-card p-6 rounded-2xl relative group flex items-center gap-5 hover:bg-gray-50 dark:hover:bg-white/5 transition-all duration-300">
-                            <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <div className="absolute top-4 right-4 z-50">
                                 <button
-                                    onClick={() => handleDelete(cat.id)}
-                                    className="p-1.5 text-gray-500 dark:text-silver-600 hover:text-red-500 dark:hover:text-red-400 transition-colors"
+                                    onClick={(e) => {
+                                        e.stopPropagation(); // Prevent card click
+                                        handleDelete(cat.id);
+                                    }}
+                                    className="p-2 bg-white/80 rounded-full text-red-500 hover:bg-red-100 hover:text-red-700 transition-colors shadow-sm"
                                 >
-                                    <Trash2 size={16} />
+                                    <Trash2 size={18} />
                                 </button>
                             </div>
 

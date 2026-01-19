@@ -71,13 +71,15 @@ const Transactions = () => {
     }, []);
 
     const handleDelete = async (id: string) => {
-        if (!confirm('Are you sure?')) return;
+        // if (!confirm('Are you sure?')) return;
+        toast.info('Deleting transaction...');
         try {
             await api.delete(`/transactions/${id}`);
             toast.success('Transaction deleted');
             fetchData();
-        } catch (error) {
-            toast.error('Failed to delete');
+        } catch (error: any) {
+            console.error(error);
+            toast.error(error.response?.data?.message || 'Failed to delete');
         }
     };
 
@@ -196,8 +198,11 @@ const Transactions = () => {
                                         </td>
                                         <td className="px-6 py-4 text-right">
                                             <button
-                                                onClick={() => handleDelete(tx.id)}
-                                                className="p-2 text-silver-600 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all opacity-0 group-hover:opacity-100"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleDelete(tx.id);
+                                                }}
+                                                className="p-2 text-silver-600 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all"
                                             >
                                                 <Trash2 size={18} />
                                             </button>

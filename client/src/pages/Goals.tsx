@@ -69,13 +69,15 @@ const Goals = () => {
     };
 
     const handleDelete = async (id: string) => {
-        if (!confirm('Delete this goal?')) return;
+        // if (!confirm('Delete this goal?')) return;
+        toast.info('Deleting goal...');
         try {
             await api.delete(`/goals/${id}`);
             toast.success('Goal deleted');
             fetchData();
-        } catch (error) {
-            toast.error('Failed to delete goal');
+        } catch (error: any) {
+            console.error(error);
+            toast.error(error.response?.data?.message || 'Failed to delete goal');
         }
     };
 
@@ -101,16 +103,22 @@ const Goals = () => {
 
                     return (
                         <div key={goal.id} className="glass-card p-6 rounded-xl shadow-sm relative group hover:border-gold-500/30 transition-all">
-                            <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <div className="absolute top-4 right-4 flex gap-2 z-50">
                                 <button
-                                    onClick={() => handleEdit(goal)}
-                                    className="text-gray-400 hover:text-blue-500"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleEdit(goal);
+                                    }}
+                                    className="p-1.5 bg-white/80 rounded-lg text-gray-400 hover:text-blue-500 hover:bg-blue-50 transition-all shadow-sm"
                                 >
                                     <Edit2 size={18} />
                                 </button>
                                 <button
-                                    onClick={() => handleDelete(goal.id)}
-                                    className="text-gray-400 hover:text-red-500"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleDelete(goal.id);
+                                    }}
+                                    className="p-1.5 bg-white/80 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 transition-all shadow-sm"
                                 >
                                     <Trash2 size={18} />
                                 </button>
