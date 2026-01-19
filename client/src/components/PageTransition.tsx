@@ -14,7 +14,7 @@ const variants: Variants = {
         scale: 1,
         transition: {
             duration: 0.4,
-            ease: [0.61, 1, 0.88, 1] // Custom ease for "snappy" feel
+            ease: "easeInOut" // Custom ease replaced with standard for type safety
         }
     },
     exit: {
